@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.serratec.curriculo.Dto.CandidatoDto;
 import org.serratec.curriculo.model.Candidato;
+import org.serratec.curriculo.model.VagaDesejada;
 import org.serratec.curriculo.repository.CandidatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class CandidatoService {
 	
 	public CandidatoDto salvarCandidato(CandidatoDto candidato) {
 		return CandidatoDto.toDto(repositorio.save(candidato.ToEntity()));
+	}
+	
+	public List<CandidatoDto> obterPorVaga(VagaDesejada vagaDesejada) {
+		List<Candidato> candidato = repositorio.findByVagaDesejada(vagaDesejada);
+		return candidato.stream().map(c -> CandidatoDto.toDto(c)).toList();
 	}
 	
 	public boolean apagarCandidato(Long id) {

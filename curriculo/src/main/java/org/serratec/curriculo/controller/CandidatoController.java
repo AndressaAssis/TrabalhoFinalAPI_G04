@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.serratec.curriculo.Dto.CandidatoDto;
+import org.serratec.curriculo.model.VagaDesejada;
 import org.serratec.curriculo.service.CandidatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,11 @@ public class CandidatoController {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(candidato.get());
+	}
+	
+	@GetMapping("/vaga/{vaga}")
+	public List<CandidatoDto> obterPorVaga(@PathVariable VagaDesejada vaga) {
+		return servico.obterPorVaga(vaga);
 	}
 	
 	@PostMapping
