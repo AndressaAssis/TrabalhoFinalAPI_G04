@@ -1,62 +1,44 @@
-# ✨ Avaliação: Desenvolvimento de API REST para um sistema de currículos de uma empresa de TI ✨
 
-## Objetivo: 💢
-Desenvolver uma API RESTful utilizando Spring e Java para gerenciar
-informações de um sistema de cadastro de currículos. A API deve permitir a
-manipulação de dados relacionados aos candidatos a vagas em processos seletivos.
+# 💫 Disciplina: API RESTful - Projeto de Conclusão 2024.2 - GRUPO 4
 
-## Requisitos:
+Projeto final desenvolvido para a Disciplina de API RESTful do programa de residência em Software SerraTec 2024.2. O projeto será desenvolvida uma API RESTFul de um E-commerce, a partir das
+regras de negócio e requisitos descritos neste documento. 
 
- 1 - Modelagem de Dados: 
 
-● Criar modelos para representar candidatos (entity), vagas (enum), escolaridade (enum) e status do currículo (enum),
-considerando os atributos relevantes para cada entidade, que são:
+## Tecnologias utilizadas 💻
 
-Candidato:
-nome
-dataNascimento
-cpf
-escolaridade (tipos: MEDIO, FUNDAMENTAL, GRADUACAO, POS_GRADUACAO, ESPECIALIZACAO)
-vagaDesejada (tipos: ANALISTA, QA, DEV, TECH_LEAD, SUPORTE, UX)
-statusCurriculo (tpos: EM_ANALISE, REPROVADO, APROVADO)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 
-● Utilizar anotações do JPA para mapear as entidades para tabelas no
-banco de dados.   
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 
-2 -  DTOs (Data Transfer Objects): 
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-● Criar DTOs para representar os objetos que serão enviados e recebidos
-pela API. Os DTOs devem ser utilizados para evitar vazamento de
-informações e garantir uma separação clara entre a camada de
-apresentação e a camada de negócios. 
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+## Documentação 📃
 
-3 - Repositories: 
+API deverá utilizar como documentação a ferramenta do Swagger.
 
-● Implementar interfaces Repository para cada entidade, fornecendo
-métodos para realizar operações básicas de CRUD (Create, Read,
-Update, Delete). 
-● ** PLUS **  Utilizar derived queries para realizar consultas no banco de dados por vaga desejada ou  escolaridade do candidato.
+[Documentação](https://linktodocumentation)
 
- 4 - Services: 
 
-● Criar classes de serviço para implementar a lógica de negócios
-relacionada ao cadastro de currículos;
-● Implementar métodos nos serviços para realizar operações como
-adicionar um novo currículo,  atualizar
-informações do status, etc. 
+## Requisitos 📍
 
-5 - Controllers: 
+- No ato de cadastro de um novo pedido deverá ser calculado os valores bruto e líquido dos produtos.
 
-● Implementar controllers para receber requisições HTTP e chamar os
-métodos apropriados nos serviços.
-● Utilizar anotações do Spring como @RestController,
-@RequestMapping, @GetMapping, @PostMapping, etc. 
+- Ao final do cadastro de um novo pedido deverá ser calculado e armazenado o seu valor total.
 
-## Instalação ✅
-- Clonar o repositório: 
-  ```
-  git clone https://github.com/AndressaAssis/ProvaIndividualAPI.git
-  ```
-- Navegue até a pasta do projeto que deseja executar.
-- Instale as dependências necessárias utilizando Maven ou Gradle.
-- Use ferramentas como o Postman ou o cURL para testar as APIs criadas.
+- Os dados do endereço do Cliente deverão ser obtidos a partir de sua coleta numa API externa de consulta de CEP.
+
+- Fazer todo o tratamento de erros e validações com mensagem personalizadas.
+## Desenvolvedores
+
+
+[![LinkedIn](https://img.shields.io/badge/AndressaJandre-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/andressa-jandre-289b472b9/) 
+&nbsp; 
+[![LinkedIn](https://img.shields.io/badge/JoãoGabriel-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](http://www.linkedin.com/in/joao-gabriel-tavares-siqueira-5b1479332) 
+&nbsp;
+[![LinkedIn](https://img.shields.io/badge/LuizFernando-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/perfil4) 
+&nbsp; 
+[![LinkedIn](https://img.shields.io/badge/MiltonRodrigues-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/miltonrdmf/) 
+&nbsp; 
+[![LinkedIn](https://img.shields.io/badge/TiagoVentura-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tiago-ventura-4a5571234/)
