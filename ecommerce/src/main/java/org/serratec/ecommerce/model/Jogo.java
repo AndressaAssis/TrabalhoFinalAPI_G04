@@ -1,6 +1,7 @@
 package org.serratec.ecommerce.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,17 +20,26 @@ public class Jogo {
 	private Long id;
 	private String nome;
 	
+	@OneToMany(mappedBy = "jogo")
+    private List<ItemPedido> itensPedido;
+	
 	@Enumerated(EnumType.STRING)
 	private Genero genero;
 	
 	@Enumerated(EnumType.STRING)
 	private Plataforma plataforma;
 	
-	private double valor_unitario;
+	private double valorUnitario;
 	private String descricao;
-	private int quantidade_estoque;
-	private LocalDate data_cadastro;
+	private int quantidadeEstoque;
+	private LocalDate dataCadastro;
 	
+	public List<ItemPedido> getItensPedido() {
+		return itensPedido;
+	}
+	public void setItensPedido(List<ItemPedido> itensPedido) {
+		this.itensPedido = itensPedido;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -54,10 +65,10 @@ public class Jogo {
 		this.plataforma = plataforma;
 	}
 	public double getValor() {
-		return valor_unitario;
+		return valorUnitario;
 	}
-	public void setValor(double valor_unitario) {
-		this.valor_unitario = valor_unitario;
+	public void setValor(double valorUnitario) {
+		this.valorUnitario = valorUnitario;
 	}
 	public String getDescricao() {
 		return descricao;
@@ -65,22 +76,22 @@ public class Jogo {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public int getQuantidade_estoque() {
-		return quantidade_estoque;
+	public int getQuantidadeEstoque() {
+		return quantidadeEstoque;
 	}
-	public void setQuantidade_estoque(int quantidade_estoque) {
-		this.quantidade_estoque = quantidade_estoque;
+	public void setQuantidadeEstoque(int quantidadeEstoque) {
+		this.quantidadeEstoque = quantidadeEstoque;
 	}
-	public double getValor_unitario() {
-		return valor_unitario;
+	public double getValorUnitario() {
+		return valorUnitario;
 	}
-	public void setValor_unitario(double valor_unitario) {
-		this.valor_unitario = valor_unitario;
+	public void setValorUnitario(double valorUnitario) {
+		this.valorUnitario = valorUnitario;
 	}
-	public LocalDate getData_cadastro() {
-		return data_cadastro;
+	public LocalDate getDataCadastro() {
+		return dataCadastro;
 	}
-	public void setData_cadastro(LocalDate data_cadastro) {
-		this.data_cadastro = data_cadastro;
+	public void setDataCadastro(LocalDate dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 }
