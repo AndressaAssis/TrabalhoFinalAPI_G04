@@ -2,6 +2,7 @@ package org.serratec.ecommerce.model;
 
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,17 +15,27 @@ public class ItemPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @ManyToOne
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
+    
     @ManyToOne
-    @JoinColumn(name = "jogo_id")
+    @JoinColumn(name = "produto_id")
     private Jogo jogo;
+    
+    @Column(name = "precounitario")
     private double precoUnitario;
     private int quantidade;
+    
+    @Column(name = "percentualdesconto")
     private double percentualDesconto;
+    
+    @Column(name = "valorliquido")
     private double valorLiquido;
     
+    @Column(name = "valorbruto")
+    private double valorBruto;
     
 	public Long getId() {
 		return id;
@@ -69,7 +80,11 @@ public class ItemPedido {
 		this.valorLiquido = valorLiquido;
 	}
     
-    
-
-    
+	public double getValorBruto() {
+		return valorBruto;
+	}
+	public void setValorBruto(double valorBruto) {
+		this.valorBruto = valorBruto;
+	}
+ 
 }

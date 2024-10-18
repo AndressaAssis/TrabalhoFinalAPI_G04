@@ -17,9 +17,11 @@ public class Endereco {
     private String logradouro;
     private String bairro;
     private String cidade;
-    private String estado;
+    private double numero;
+    private String complemento;
+    private String uf;
 
-    @ManyToOne
+	@ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
@@ -63,12 +65,20 @@ public class Endereco {
 		this.cidade = cidade;
 	}
 
-	public String getEstado() {
-		return estado;
+	public double getNumero() {
+		return numero;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setNumero(double numero) {
+		this.numero = numero;
+	}
+
+	public String getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
 	}
 
 	public Cliente getCliente() {
@@ -78,7 +88,13 @@ public class Endereco {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-    
+	 public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
     
 
 }

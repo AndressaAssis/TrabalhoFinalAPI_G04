@@ -5,8 +5,13 @@ import java.util.List;
 
 import org.serratec.ecommerce.model.Pedido;
 
-public record PedidoDto(Long id, LocalDate dataPedido, double valorTotal, Long clienteId,
-		List<ItemPedidoDto> itensPedido) {
+public record PedidoDto(
+		Long id, 
+		LocalDate dataPedido, 
+		double valorTotal, 
+		Long clienteId,
+		List<ItemPedidoDto> itensPedido
+		){
 
 	public Pedido toEntity() {
 		Pedido pedido = new Pedido();

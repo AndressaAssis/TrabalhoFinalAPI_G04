@@ -3,6 +3,7 @@ package org.serratec.ecommerce.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +19,7 @@ public class Jogo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String nome;
 	
 	@OneToMany(mappedBy = "jogo")
@@ -29,9 +31,15 @@ public class Jogo {
 	@Enumerated(EnumType.STRING)
 	private Plataforma plataforma;
 	
-	private double valorUnitario;
+	@Column(name = "precounitario")
+	private double precoUnitario;
+	
 	private String descricao;
+	
+	@Column(name = "quantidadeestoque")
 	private int quantidadeEstoque;
+	
+	@Column(name = "datacadastro")
 	private LocalDate dataCadastro;
 	
 	public List<ItemPedido> getItensPedido() {
@@ -64,12 +72,6 @@ public class Jogo {
 	public void setPlataforma(Plataforma plataforma) {
 		this.plataforma = plataforma;
 	}
-	public double getValor() {
-		return valorUnitario;
-	}
-	public void setValor(double valorUnitario) {
-		this.valorUnitario = valorUnitario;
-	}
 	public String getDescricao() {
 		return descricao;
 	}
@@ -82,11 +84,11 @@ public class Jogo {
 	public void setQuantidadeEstoque(int quantidadeEstoque) {
 		this.quantidadeEstoque = quantidadeEstoque;
 	}
-	public double getValorUnitario() {
-		return valorUnitario;
+	public double getPrecoUnitario() {
+		return precoUnitario;
 	}
-	public void setValorUnitario(double valorUnitario) {
-		this.valorUnitario = valorUnitario;
+	public void setPrecoUnitario(double precoUnitario) {
+		this.precoUnitario = precoUnitario;
 	}
 	public LocalDate getDataCadastro() {
 		return dataCadastro;

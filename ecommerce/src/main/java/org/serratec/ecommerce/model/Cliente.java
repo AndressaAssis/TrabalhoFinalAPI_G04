@@ -1,5 +1,6 @@
 package org.serratec.ecommerce.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -15,13 +16,21 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String nome;
 	@Column(unique = true)
+	
 	private String cpf;
 	@Column(unique = true)
+	
 	private String email;
+	
+	@Column(name = "datanascimento")
+	private LocalDate dataNascimento;
+	
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos;
+	
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos;
 
@@ -55,6 +64,14 @@ public class Cliente {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public List<Endereco> getEnderecos() {

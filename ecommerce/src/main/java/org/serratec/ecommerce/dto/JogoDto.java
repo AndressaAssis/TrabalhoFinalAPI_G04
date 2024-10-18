@@ -11,10 +11,11 @@ public record JogoDto(
         String nome,
         Genero genero,
         Plataforma plataforma,
-        double valorUnitario,
+        double precoUnitario,
         String descricao,
         int quantidadeEstoque,
-        LocalDate dataCadastro) {
+        LocalDate dataCadastro
+        ){
 
     public Jogo toEntity() {
         Jogo jogo = new Jogo();
@@ -22,7 +23,7 @@ public record JogoDto(
         jogo.setNome(this.nome);
         jogo.setGenero(this.genero);
         jogo.setPlataforma(this.plataforma);
-        jogo.setValorUnitario(this.valorUnitario);
+        jogo.setPrecoUnitario(this.precoUnitario);
         jogo.setDescricao(this.descricao);
         jogo.setQuantidadeEstoque(this.quantidadeEstoque);
         jogo.setDataCadastro(this.dataCadastro);
@@ -35,7 +36,7 @@ public record JogoDto(
                 jogo.getNome(),
                 jogo.getGenero(),
                 jogo.getPlataforma(),
-                jogo.getValorUnitario(),
+                jogo.getPrecoUnitario(),
                 jogo.getDescricao(),
                 jogo.getQuantidadeEstoque(),
                 jogo.getDataCadastro());
