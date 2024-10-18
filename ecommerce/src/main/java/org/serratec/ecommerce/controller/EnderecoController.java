@@ -3,8 +3,8 @@ package org.serratec.ecommerce.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.serratec.ecommerce.dto.JogoDto;
-import org.serratec.ecommerce.service.JogoService;
+import org.serratec.ecommerce.dto.EnderecoDto;
+import org.serratec.ecommerce.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,46 +19,46 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/jogos")
-public class JogoController {
+@RequestMapping("/enderecos")
+public class EnderecoController {
 
     @Autowired
-    private JogoService jogoService;
+    private EnderecoService enderecoService;
 
     @GetMapping
-    public List<JogoDto> obterTodos() {
-        return jogoService.obterTodos();
+    public List<EnderecoDto> listarTodos() {
+        return enderecoService.obterTodos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JogoDto> obterPorId(@PathVariable Long id) {
-        Optional<JogoDto> dto = jogoService.obterPorId(id);
-        if (!dto.isPresent()) {
+    public ResponseEntity<EnderecoDto> obterPorId(@PathVariable Long id) {
+        Optional<EnderecoDto> endereco = enderecoService.obterPorId(id);
+        if (!endereco.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(dto.get());
+        return ResponseEntity.ok(endereco.get());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public JogoDto cadastrarJogo(@RequestBody JogoDto dto) {
-        return jogoService.salvarJogo(dto);
+    public EnderecoDto criarEndereco(@RequestBody EnderecoDto dto) {
+        return enderecoService.salvarEndereco(dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirJogo(@PathVariable Long id) {
-        if (!jogoService.apagarJogo(id)) {
+    public ResponseEntity<Void> apagarEndereco(@PathVariable Long id) {
+        if (!enderecoService.apagarEndereco(id)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JogoDto> alterarJogo(@PathVariable Long id, @RequestBody JogoDto dto) {
-        Optional<JogoDto> jogoAlterado = jogoService.alterarJogo(id, dto);
-        if (!jogoAlterado.isPresent()) {
+    public ResponseEntity<EnderecoDto> atualizarEndereco(@PathVariable Long id, @RequestBody EnderecoDto dto) {
+        Optional<EnderecoDto> enderecoAtualizado = enderecoService.alterarEndereco(id, dto);
+        if (!enderecoAtualizado.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(jogoAlterado.get());
+        return ResponseEntity.ok(enderecoAtualizado.get());
     }
 }
