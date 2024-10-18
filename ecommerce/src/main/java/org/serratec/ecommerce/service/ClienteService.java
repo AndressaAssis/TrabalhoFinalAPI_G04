@@ -3,6 +3,7 @@ package org.serratec.ecommerce.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.ecommerce.dto.CadastroClienteDto;
 import org.serratec.ecommerce.dto.ClienteDto;
 import org.serratec.ecommerce.model.Cliente;
 import org.serratec.ecommerce.repository.ClienteRepository;
@@ -26,10 +27,13 @@ public class ClienteService {
 		return Optional.of(ClienteDto.toDTO(clienteRepository.findById(id).get()));
 	}
 
-	public ClienteDto salvarCliente(ClienteDto dto) {
-		Cliente clienteEntity = dto.toEntity();
-		clienteEntity = clienteRepository.save(clienteEntity);
-		return ClienteDto.toDTO(clienteEntity);
+	public ClienteDto salvarCliente(CadastroClienteDto dto) {
+		String endereco = ViaCepService.buscaEndereco(dto.cep());
+		
+		
+		//		Cliente clienteEntity = dto.toEntity();
+//		clienteEntity = clienteRepository.save(clienteEntity);
+//		return ClienteDto.toDTO(clienteEntity);
 	}
 
 	public boolean apagarCliente(Long id) {

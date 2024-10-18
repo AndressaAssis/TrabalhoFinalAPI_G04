@@ -3,6 +3,7 @@ package org.serratec.ecommerce.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.ecommerce.dto.CadastroClienteDto;
 import org.serratec.ecommerce.dto.ClienteDto;
 import org.serratec.ecommerce.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class ClienteController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ClienteDto criarCliente(@RequestBody ClienteDto dto) {
+	public ClienteDto criarCliente(@RequestBody CadastroClienteDto dto) {
 		return clienteService.salvarCliente(dto);
 	}
 

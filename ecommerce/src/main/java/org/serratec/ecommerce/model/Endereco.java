@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Endereco {
@@ -21,7 +21,7 @@ public class Endereco {
     private String complemento;
     private String uf;
 
-	@ManyToOne
+	@OneToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
