@@ -37,8 +37,8 @@ API deverá utilizar como documentação a ferramenta do Swagger.
 &nbsp; 
 [![LinkedIn](https://img.shields.io/badge/JoãoGabriel-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](http://www.linkedin.com/in/joao-gabriel-tavares-siqueira-5b1479332) 
 &nbsp;
-[![LinkedIn](https://img.shields.io/badge/LuizFernando-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)]([https://www.linkedin.com/in/perfil4](https://www.linkedin.com/in/luiz-fernando-francedino-chagas-5592291b5/)) 
-&nbsp; 
+[![LinkedIn](https://img.shields.io/badge/LuizFernando-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/luiz-fernando-francedino-chagas-5592291b5/) 
+&nbsp;
 [![LinkedIn](https://img.shields.io/badge/MiltonRodrigues-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/miltonrdmf/) 
 &nbsp; 
 [![LinkedIn](https://img.shields.io/badge/TiagoVentura-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tiago-ventura-4a5571234/)
