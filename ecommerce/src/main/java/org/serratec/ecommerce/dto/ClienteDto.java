@@ -28,7 +28,12 @@ public record ClienteDto(
 	public static ClienteDto toDTO(Cliente cliente) {
 		List<Long> enderecosIds = cliente.getEnderecos().stream().map(endereco -> endereco.getId()).toList();
 		List<Long> pedidosIds = cliente.getPedidos().stream().map(pedido -> pedido.getId()).toList();
-		return new ClienteDto(cliente.getId(), cliente.getNome(), cliente.getCpf(), cliente.getEmail(), cliente.getDataNascimento(), enderecosIds,
+		return new ClienteDto(cliente.getId(), 
+				cliente.getNome(), 
+				cliente.getCpf(), 
+				cliente.getEmail(), 
+				cliente.getDataNascimento(), 
+				enderecosIds,
 				pedidosIds);
 	}
 }

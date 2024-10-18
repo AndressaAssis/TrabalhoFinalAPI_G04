@@ -1,3 +1,4 @@
+
 package org.serratec.ecommerce.model;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "produto")
@@ -26,14 +28,17 @@ public class Jogo {
     private List<ItemPedido> itensPedido;
 	
 	@Enumerated(EnumType.STRING)
+	@NotNull(message = "O gênero não pode ser nulo.")
 	private Genero genero;
 	
 	@Enumerated(EnumType.STRING)
+	@NotNull(message = "A plataforma não pode ser nulo.")
 	private Plataforma plataforma;
 	
 	@Column(name = "precounitario")
 	private double precoUnitario;
 	
+    @Column(unique = true)
 	private String descricao;
 	
 	@Column(name = "quantidadeestoque")

@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.FutureOrPresent;
 
 @Entity
 public class Pedido {
@@ -21,6 +22,7 @@ public class Pedido {
     private Long id;
     
     @Column(name = "datapedido")
+    @FutureOrPresent(message = "A data do pedido não pode ser retroativa.")
     private LocalDate dataPedido;
     
     @Column(name = "valortotal")
