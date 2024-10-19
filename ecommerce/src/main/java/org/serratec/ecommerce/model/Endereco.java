@@ -1,10 +1,11 @@
 package org.serratec.ecommerce.model;
 
+import org.serratec.ecommerce.dto.EnderecoViacepDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -12,25 +13,25 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String cep;
     private String logradouro;
     private String bairro;
+    private String cep;
     private String cidade;
-    private double numero;
-    private String complemento;
+    private String numero;
     private String uf;
 
-	@OneToOne
-    @JoinColumn(name = "cliente_id")
+    @OneToOne(mappedBy = "endereco")
     private Cliente cliente;
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Endereco(EnderecoViacepDto dto) {
+		super();
+		this.logradouro = dto.getLogradouro();
+		this.bairro = dto.getBairro();
+		this.cidade = dto.getLocalidade();
+		this.numero = dto.getNumero();
+		this.cep = dto.getCep();
+		this.uf = dto.getUf();
 	}
 
 	public String getCep() {
@@ -39,6 +40,14 @@ public class Endereco {
 
 	public void setCep(String cep) {
 		this.cep = cep;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getLogradouro() {
@@ -65,20 +74,12 @@ public class Endereco {
 		this.cidade = cidade;
 	}
 
-	public double getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(double numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
-	}
-
-	public String getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
 	}
 
 	public Cliente getCliente() {
@@ -98,8 +99,8 @@ public class Endereco {
 
 	@Override
 	public String toString() {
-		return "Endereco [id=" + id + ", cep=" + cep + ", logradouro=" + logradouro + ", bairro=" + bairro + ", cidade="
-				+ cidade + ", numero=" + numero + ", complemento=" + complemento + ", uf=" + uf + ", cliente=" + cliente
+		return "Endereco [id=" + id + ", logradouro=" + logradouro + ", bairro=" + bairro + ", cidade="
+				+ cidade + ", numero=" + numero + ", uf=" + uf + ", cliente=" + cliente
 				+ "]";
 	}
     

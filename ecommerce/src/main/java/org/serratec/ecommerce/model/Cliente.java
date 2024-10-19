@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -34,8 +35,8 @@ public class Cliente {
 	@Column(name = "datanascimento")
 	private LocalDate dataNascimento;
 	
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-	private List<Endereco> enderecos;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Endereco endereco;
 	
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos;
@@ -80,12 +81,12 @@ public class Cliente {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public List<Endereco> getEnderecos() {
-		return enderecos;
+	public Endereco getEndereco() {
+		return endereco;
 	}
 
-	public void setEnderecos(List<Endereco> enderecos) {
-		this.enderecos = enderecos;
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 	public List<Pedido> getPedidos() {

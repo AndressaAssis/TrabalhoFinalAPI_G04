@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.serratec.ecommerce.dto.CadastroClienteDto;
 import org.serratec.ecommerce.dto.ClienteDto;
+import org.serratec.ecommerce.dto.EnderecoViacepDto;
 import org.serratec.ecommerce.model.Cliente;
+import org.serratec.ecommerce.model.Endereco;
 import org.serratec.ecommerce.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +30,21 @@ public class ClienteService {
 	}
 
 	public ClienteDto salvarCliente(CadastroClienteDto dto) {
-		String endereco = ViaCepService.buscaEndereco(dto.cep());
+		EnderecoViacepDto enderecoViacep = ViaCepService.buscaEndereco(dto.cep());
+		enderecoViacep.setNumero(dto.numero());
 		
+		Endereco endereco = new Endereco(enderecoViacep);
 		
-		//		Cliente clienteEntity = dto.toEntity();
-//		clienteEntity = clienteRepository.save(clienteEntity);
-//		return ClienteDto.toDTO(clienteEntity);
+	    Cliente clienteEntity = new Cliente();
+	    clienteEntity.setNome(dto.nome());
+	    clienteEntity.setEmail(dto.email());
+	    clienteEntity.setCpf(dto.cpf());
+	    clienteEntity.setEndereco(endereco);
+		    
+		   
+		clienteEntity = clienteRepository.save(clienteEntity);
+		
+		return ClienteDto.toDTO(clienteEntity);
 	}
 
 	public boolean apagarCliente(Long id) {

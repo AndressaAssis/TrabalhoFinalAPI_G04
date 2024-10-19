@@ -8,10 +8,10 @@ public record CadastroClienteDto(
 		String nome, 
 		String cpf, 
 		String email,
-		LocalDate dataNascimento,
-		String cep,
 		String numero,
-		String complemento)
-{
-
+		LocalDate dataNascimento,
+		String cep
+		){
+	
+	
 }
