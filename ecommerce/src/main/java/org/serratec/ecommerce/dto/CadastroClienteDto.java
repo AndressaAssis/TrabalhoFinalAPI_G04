@@ -2,6 +2,8 @@ package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public record CadastroClienteDto(
 
 		Long id, 
@@ -9,6 +11,7 @@ public record CadastroClienteDto(
 		String cpf, 
 		String email,
 		String numero,
+		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 		LocalDate dataNascimento,
 		String cep
 		){

@@ -39,6 +39,7 @@ public class ClienteService {
 	    clienteEntity.setNome(dto.nome());
 	    clienteEntity.setEmail(dto.email());
 	    clienteEntity.setCpf(dto.cpf());
+	    clienteEntity.setDataNascimento(dto.dataNascimento());
 	    clienteEntity.setEndereco(endereco);
 		    
 		   

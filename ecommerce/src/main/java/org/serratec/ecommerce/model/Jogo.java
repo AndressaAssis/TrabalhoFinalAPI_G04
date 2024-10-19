@@ -22,6 +22,7 @@ public class Jogo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+    @Column(unique = true)
 	private String nome;
 	
 	@OneToMany(mappedBy = "jogo")

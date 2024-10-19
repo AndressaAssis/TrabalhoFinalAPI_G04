@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.serratec.ecommerce.dto.ItemPedidoDto;
 import org.serratec.ecommerce.model.ItemPedido;
+import org.serratec.ecommerce.model.Jogo;
+import org.serratec.ecommerce.model.Pedido;
 import org.serratec.ecommerce.repository.ItemPedidoRepository;
 import org.serratec.ecommerce.repository.JogoRepository;
 import org.serratec.ecommerce.repository.PedidoRepository;
@@ -36,12 +38,22 @@ public class ItemPedidoService {
 
 	public ItemPedidoDto salvarItemPedido(ItemPedidoDto dto) {
 		ItemPedido itemPedidoEntity = dto.toEntity();
-		itemPedidoEntity.setPedido(pedidoRepository.findById(dto.pedidoId())
-				.orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado.")));
-		itemPedidoEntity.setJogo(jogoRepository.findById(dto.jogoId())
-				.orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado.")));
-		itemPedidoEntity = itemPedidoRepository.save(itemPedidoEntity);
-		return ItemPedidoDto.toDTO(itemPedidoEntity);
+		
+		Jogo jogo = jogoRepository.findById(dto.jogoId()).orElseThrow(() -> new RuntimeException("Jogo não encontrado"));
+	    Pedido pedido = pedidoRepository.findById(dto.pedidoId()).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+	    
+	    ItemPedido itemPedido = null;
+		itemPedido.setJogo(jogo);
+	    itemPedido.setPedido(pedido);
+	    
+	    itemPedido.setValorBruto(itemPedido.getPrecoUnitario() * itemPedido.getQuantidade());
+	    itemPedido.setValorLiquido(itemPedido.getValorBruto() * (1 - (itemPedido.getPercentualDesconto() / 100)));
+	    
+	    itemPedidoRepository.save(itemPedido);
+	    
+	    return new ItemPedidoDto(itemPedido.getId(), pedido.getId(), jogo.getId(), itemPedido.getPrecoUnitario(), itemPedido.getQuantidade(), 
+	            itemPedido.getPercentualDesconto(), itemPedido.getValorBruto(), 
+	            itemPedido.getValorLiquido());
 	}
 
 	public boolean apagarItemPedido(Long id) {

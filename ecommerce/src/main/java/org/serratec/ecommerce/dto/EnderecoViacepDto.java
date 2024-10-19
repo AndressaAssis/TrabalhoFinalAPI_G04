@@ -101,6 +101,13 @@ public class EnderecoViacepDto {
 		public void setSiafi(String siafi) {
 			this.siafi = siafi;
 		}
+		@Override
+		public String toString() {
+			return "EnderecoViacepDto [cep=" + cep + ", logradouro=" + logradouro + ", complemento=" + complemento
+					+ ", unidade=" + unidade + ", bairro=" + bairro + ", localidade=" + localidade + ", uf=" + uf
+					+ ", estado=" + estado + ", regiao=" + regiao + ", ibge=" + ibge + ", gia=" + gia + ", ddd=" + ddd
+					+ ", siafi=" + siafi + ", numero=" + numero + "]";
+		}
 	    
 	    
 }

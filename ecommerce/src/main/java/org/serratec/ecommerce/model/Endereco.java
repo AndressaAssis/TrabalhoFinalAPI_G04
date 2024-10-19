@@ -2,6 +2,8 @@ package org.serratec.ecommerce.model;
 
 import org.serratec.ecommerce.dto.EnderecoViacepDto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,9 +23,11 @@ public class Endereco {
     private String uf;
 
     @OneToOne(mappedBy = "endereco")
+    @JsonIgnore
     private Cliente cliente;
 
-
+    public Endereco() {}
+    
 	public Endereco(EnderecoViacepDto dto) {
 		super();
 		this.logradouro = dto.getLogradouro();
@@ -99,9 +103,8 @@ public class Endereco {
 
 	@Override
 	public String toString() {
-		return "Endereco [id=" + id + ", logradouro=" + logradouro + ", bairro=" + bairro + ", cidade="
-				+ cidade + ", numero=" + numero + ", uf=" + uf + ", cliente=" + cliente
-				+ "]";
+		return "Endereco [id=" + id + ", logradouro=" + logradouro + ", bairro=" + bairro + ", cep=" + cep + ", cidade="
+				+ cidade + ", numero=" + numero + ", uf=" + uf + ", cliente=" + cliente + "]";
 	}
     
 

@@ -1,6 +1,6 @@
 package org.serratec.ecommerce.model;
 
-
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +26,7 @@ public class ItemPedido {
     
     @Column(name = "precounitario")
     private double precoUnitario;
+    
     private int quantidade;
     
     @Column(name = "percentualdesconto")
@@ -85,6 +86,26 @@ public class ItemPedido {
 	}
 	public void setValorBruto(double valorBruto) {
 		this.valorBruto = valorBruto;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, jogo, pedido, percentualDesconto, precoUnitario, quantidade, valorBruto, valorLiquido);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemPedido other = (ItemPedido) obj;
+		return Objects.equals(id, other.id) && Objects.equals(jogo, other.jogo) && Objects.equals(pedido, other.pedido)
+				&& Double.doubleToLongBits(percentualDesconto) == Double.doubleToLongBits(other.percentualDesconto)
+				&& Double.doubleToLongBits(precoUnitario) == Double.doubleToLongBits(other.precoUnitario)
+				&& quantidade == other.quantidade
+				&& Double.doubleToLongBits(valorBruto) == Double.doubleToLongBits(other.valorBruto)
+				&& Double.doubleToLongBits(valorLiquido) == Double.doubleToLongBits(other.valorLiquido);
 	}
  
 }

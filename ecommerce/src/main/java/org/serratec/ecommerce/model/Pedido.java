@@ -2,6 +2,7 @@ package org.serratec.ecommerce.model;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -33,7 +34,7 @@ public class Pedido {
     private Cliente cliente;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<ItemPedido> itensPedido;
+    private List<ItemPedido> itensPedido= new ArrayList<>(); 
     
     
 	public Long getId() {
