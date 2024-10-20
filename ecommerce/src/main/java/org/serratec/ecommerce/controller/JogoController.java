@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.serratec.ecommerce.dto.JogoDto;
+import org.serratec.ecommerce.exception.ResourceNotFoundException;
 import org.serratec.ecommerce.service.JogoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,7 +36,11 @@ public class JogoController {
     		@ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum jogo cadastrado.")		
     })
     public List<JogoDto> obterTodos() {
-        return jogoService.obterTodos();
+        List<JogoDto> jogos = jogoService.obterTodos();
+        if (jogos.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum jogo encontrado.");
+        }
+        return jogos;
     }
 
     @GetMapping("/{id}")
@@ -47,11 +51,15 @@ public class JogoController {
     		@ApiResponse(responseCode = "200", description = "Jogo localizado.")		
     })
     public ResponseEntity<JogoDto> obterPorId(@PathVariable Long id) {
-        Optional<JogoDto> dto = jogoService.obterPorId(id);
-        if (!dto.isPresent()) {
-            return ResponseEntity.notFound().build();
+        try {
+            Optional<JogoDto> dto = jogoService.obterPorId(id);
+            if (dto.isEmpty()) {
+                throw new ResourceNotFoundException("Não foi encontrado o jogo pelo id informado: " + id);
+            }
+            return ResponseEntity.ok(dto.get());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Erro ao buscar o jogo: " + e.getMessage());
         }
-        return ResponseEntity.ok(dto.get());
     }
 
     @PostMapping
@@ -63,7 +71,13 @@ public class JogoController {
     		@ApiResponse(responseCode = "201", description = "Jogo criado com sucesso.")		
     })
     public JogoDto cadastrarJogo(@RequestBody JogoDto dto) {
-        return jogoService.salvarJogo(dto);
+        try {
+            return jogoService.salvarJogo(dto);
+        } catch (IllegalArgumentException e) {
+            throw new ResourceNotFoundException("Alguma informação foi passada errada: " + e.getMessage());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Erro ao cadastrar jogo: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -74,24 +88,26 @@ public class JogoController {
     		@ApiResponse(responseCode = "204", description = "Jogo excluído.")		
     })
     public ResponseEntity<Void> excluirJogo(@PathVariable Long id) {
-        if (!jogoService.apagarJogo(id)) {
-            return ResponseEntity.notFound().build();
+        try {
+            boolean jogoApagado = jogoService.apagarJogo(id);
+            if (!jogoApagado) {
+                throw new ResourceNotFoundException("Jogo não localizado com o id: " + id);
+            }
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Erro ao tentar excluir o jogo: " + e.getMessage());
         }
-        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Atualiza um jogo pelo id",
-    description = "Dado um determinado número de id, ele irá modificar o jogo do id correspondente.")
-    @ApiResponses(value = {
-    		@ApiResponse(responseCode = "400", description = "Jogo não localizado. Verifique!"),
-    		@ApiResponse(responseCode = "200", description = "Jogo atualizado.")		
-    })
     public ResponseEntity<JogoDto> alterarJogo(@PathVariable Long id, @RequestBody JogoDto dto) {
-        Optional<JogoDto> jogoAlterado = jogoService.alterarJogo(id, dto);
-        if (!jogoAlterado.isPresent()) {
-            return ResponseEntity.notFound().build();
+        try {
+            Optional<JogoDto> jogoAlterado = jogoService.alterarJogo(id, dto);
+            if (jogoAlterado.isEmpty()) {
+                throw new ResourceNotFoundException("Jogo não localizado com o id: " + id);
+            }
+            return ResponseEntity.ok(jogoAlterado.get());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Erro ao atualizar o jogo: " + e.getMessage());
         }
-        return ResponseEntity.ok(jogoAlterado.get());
     }
 }

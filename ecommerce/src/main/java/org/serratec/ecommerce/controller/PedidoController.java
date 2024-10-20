@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.serratec.ecommerce.dto.PedidoDto;
+import org.serratec.ecommerce.exception.ResourceNotFoundException;
 import org.serratec.ecommerce.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,19 @@ public class PedidoController {
     		@ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não houve nenhum pedido.")		
     })
     public List<PedidoDto> obterTodos() {
-        return pedidoService.listarTodos();
+        try {
+            List<PedidoDto> pedidos = pedidoService.listarTodos();
+            if (pedidos.isEmpty()) {
+                throw new ResourceNotFoundException("Nenhum pedido encontrado.");
+            }
+            return pedidos;
+        } catch (ResourceNotFoundException e) {
+            // Aqui você pode lançar a exceção novamente ou fazer um log, se necessário.
+            throw e;
+        } catch (Exception e) {
+            // Trate outras exceções que possam ocorrer
+            throw new RuntimeException("Erro ao listar os pedidos.", e);
+        }
     }
 
     @GetMapping("/{id}")
@@ -46,12 +59,20 @@ public class PedidoController {
     		@ApiResponse(responseCode = "404", description = "Não foi encontrado o pedido pelo id informado. Verifique!"),
     		@ApiResponse(responseCode = "200", description = "Pedido localizado.")		
     })
-    public ResponseEntity<PedidoDto> obterPorId(@PathVariable Long id) {
-        Optional<PedidoDto> dto = pedidoService.obterPorId(id);
-        if (!dto.isPresent()) {
-            return ResponseEntity.notFound().build();
+    public PedidoDto obterPorId(@PathVariable Long id) {
+        try {
+            Optional<PedidoDto> dto = pedidoService.obterPorId(id);
+            if (!dto.isPresent()) {
+                throw new ResourceNotFoundException("Não foi encontrado o pedido com id: " + id);
+            }
+            return dto.get();
+        } catch (ResourceNotFoundException e) {
+            // Re-lança a exceção para ser tratada pelo GlobalExceptionHandler
+            throw e;
+        } catch (Exception e) {
+            // Trata outras exceções que possam ocorrer
+            throw new RuntimeException("Erro ao obter o pedido com id: " + id, e);
         }
-        return ResponseEntity.ok(dto.get());
     }
 
     @PostMapping
@@ -63,7 +84,15 @@ public class PedidoController {
     		@ApiResponse(responseCode = "201", description = "Pedido criado com sucesso.")		
     })
     public PedidoDto cadastrarPedido(@RequestBody PedidoDto dto) {
-        return pedidoService.salvarPedido(dto);
+        try {
+            // Aqui você pode adicionar validações se necessário
+            PedidoDto savedPedido = pedidoService.salvarPedido(dto);
+            return savedPedido;
+        } catch (IllegalArgumentException e) {
+            throw new ResourceNotFoundException("Alguma informação foi passada errada: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao cadastrar o pedido.", e);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -73,11 +102,17 @@ public class PedidoController {
     		@ApiResponse(responseCode = "400", description = "Pedido não localizado. Verifique!"),
     		@ApiResponse(responseCode = "204", description = "Pedido excluído.")		
     })
-    public ResponseEntity<Void> excluirPedido(@PathVariable Long id) {
-        if (!pedidoService.apagarPedido(id)) {
-            return ResponseEntity.notFound().build();
+    public void excluirPedido(@PathVariable Long id) {
+        try {
+            boolean pedidoDeletado = pedidoService.apagarPedido(id);
+            if (!pedidoDeletado) {
+                throw new ResourceNotFoundException("Pedido não localizado com id: " + id);
+            }
+        } catch (ResourceNotFoundException e) {
+            throw e; // Re-lança a exceção para ser tratada pelo GlobalExceptionHandler
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao excluir o pedido com id: " + id, e);
         }
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
@@ -87,11 +122,17 @@ public class PedidoController {
     		@ApiResponse(responseCode = "400", description = "Pedido não localizado. Verifique!"),
     		@ApiResponse(responseCode = "200", description = "Pedido atualizado.")		
     })
-    public ResponseEntity<PedidoDto> alterarPedido(@PathVariable Long id, @RequestBody PedidoDto dto) {
-        Optional<PedidoDto> pedidoAlterado = pedidoService.alterarPedido(id, dto);
-        if (!pedidoAlterado.isPresent()) {
-            return ResponseEntity.notFound().build();
+    public PedidoDto alterarPedido(@PathVariable Long id, @RequestBody PedidoDto dto) {
+        try {
+            Optional<PedidoDto> pedidoAlterado = pedidoService.alterarPedido(id, dto);
+            if (!pedidoAlterado.isPresent()) {
+                throw new ResourceNotFoundException("Pedido não localizado com id: " + id);
+            }
+            return pedidoAlterado.get();
+        } catch (ResourceNotFoundException e) {
+            throw e; // Re-lança a exceção para ser tratada pelo GlobalExceptionHandler
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao alterar o pedido com id: " + id, e);
         }
-        return ResponseEntity.ok(pedidoAlterado.get());
     }
 }

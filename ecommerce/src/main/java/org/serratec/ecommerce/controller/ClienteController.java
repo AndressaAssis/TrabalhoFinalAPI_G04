@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.serratec.ecommerce.dto.CadastroClienteDto;
 import org.serratec.ecommerce.dto.ClienteDto;
+import org.serratec.ecommerce.exception.ResourceNotFoundException;
 import org.serratec.ecommerce.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,14 +31,23 @@ public class ClienteController {
 	@Autowired
 	private ClienteService clienteService;
 
-	@GetMapping
+	@GetMapping 
 	@Operation(summary = "Retorna a lista de todos os clientes",
-    description = "Dado a informação será listado todos os clientes cadastrados.")
-    @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum cliente cadastrado.")		
-    })
+	    description = "Dado a informação será listado todos os clientes cadastrados.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum cliente cadastrado."),
+	        @ApiResponse(responseCode = "404", description = "Nenhum cliente encontrado.")
+	})
 	public List<ClienteDto> listarTodos() {
-		return clienteService.obterTodos();
+	    try {
+	        List<ClienteDto> clientes = clienteService.obterTodos();
+	        if (clientes.isEmpty()) {
+	            throw new ResourceNotFoundException("Nenhum cliente encontrado.");
+	        }
+	        return clientes;
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao listar os clientes: " + e.getMessage());
+	    }
 	}
 
 	@GetMapping("/{id}")
@@ -48,13 +58,16 @@ public class ClienteController {
     		@ApiResponse(responseCode = "200", description = "Cliente localizado.")		
     })
 	public ResponseEntity<ClienteDto> obterPorId(@PathVariable Long id) {
-		Optional<ClienteDto> cliente = clienteService.obterPorId(id);
-		if (!cliente.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(cliente.get());
+	    try {
+	        Optional<ClienteDto> cliente = clienteService.obterPorId(id);
+	        if (!cliente.isPresent()) {
+	            throw new ResourceNotFoundException("Não foi encontrado o cliente pelo id informado. Verifique o Id e tente novamente! " + id);
+	        }
+	        return ResponseEntity.ok().header("Cliente localizado.").body(cliente.get());
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao buscar cliente: " + e.getMessage());
+	    }
 	}
-
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "Cadastro de um novo cliente",
@@ -64,7 +77,13 @@ public class ClienteController {
     		@ApiResponse(responseCode = "201", description = "Cliente criado com sucesso.")		
     })
 	public ClienteDto criarCliente(@RequestBody CadastroClienteDto dto) {
-		return clienteService.salvarCliente(dto);
+	    try {
+	        return clienteService.salvarCliente(dto);
+	    } catch (IllegalArgumentException e) {
+	        throw new ResourceNotFoundException("Alguma informação foi passada errada: " + e.getMessage());
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao criar cliente: " + e.getMessage());
+	    }
 	}
 
 	@DeleteMapping("/{id}")
@@ -75,10 +94,15 @@ public class ClienteController {
     		@ApiResponse(responseCode = "204", description = "Cliente excluído.")		
     })
 	public ResponseEntity<Void> apagarCliente(@PathVariable Long id) {
-		if (!clienteService.apagarCliente(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.noContent().build();
+	    try {
+	        boolean clienteApagado = clienteService.apagarCliente(id);
+	        if (!clienteApagado) {
+	            throw new ResourceNotFoundException("Cliente não localizado com o id: " + id);
+	        }
+	        return ResponseEntity.noContent().build();
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao tentar apagar cliente: " + e.getMessage());
+	    }
 	}
 
 	@PutMapping("/{id}")
@@ -89,11 +113,15 @@ public class ClienteController {
     		@ApiResponse(responseCode = "200", description = "Cliente atualizado.")		
     })
 	public ResponseEntity<ClienteDto> atualizarCliente(@PathVariable Long id, @RequestBody CadastroClienteDto dto) {
-	    Optional<ClienteDto> clienteAtualizado = clienteService.alterarCliente(id, dto);
-	    if (clienteAtualizado.isEmpty()) {
-	        return ResponseEntity.notFound().build();
+	    try {
+	        Optional<ClienteDto> clienteAtualizado = clienteService.alterarCliente(id, dto);
+	        if (clienteAtualizado.isEmpty()) {
+	            throw new ResourceNotFoundException("Cliente não localizado com o id: " + id);
+	        }
+	        return ResponseEntity.ok(clienteAtualizado.get());
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao atualizar cliente: " + e.getMessage());
 	    }
-	    return ResponseEntity.ok(clienteAtualizado.get());
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.serratec.ecommerce.dto.ItemPedidoDto;
 import org.serratec.ecommerce.dto.ItemPedidoResponseDto;
+import org.serratec.ecommerce.exception.ResourceNotFoundException;
 import org.serratec.ecommerce.service.ItemPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,12 +34,25 @@ public class ItemPedidoController {
 
 	@GetMapping
 	@Operation(summary = "Retorna a lista de todos os pedidos da lista",
-    description = "Dado a informação será listado todos o carrinho de pedidos.")
-    @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum pedido ao carrinho.")		
-    })
+	    description = "Dado a informação será listado todos o carrinho de pedidos.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum pedido ao carrinho."),
+	        @ApiResponse(responseCode = "404", description = "Nenhum pedido encontrado.")
+	})
 	public List<ItemPedidoResponseDto> listarTodos() {
-		return itemPedidoService.listarTodos().stream()
+	    List<ItemPedidoDto> itens;
+
+	    try {
+	        itens = itemPedidoService.listarTodos();
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao buscar os pedidos: " + e.getMessage());
+	    }
+
+	    if (itens.isEmpty()) {
+	        throw new ResourceNotFoundException("Nenhum pedido encontrado no carrinho.");
+	    }
+
+	    return itens.stream()
 	            .map(item -> new ItemPedidoResponseDto(
 	                item.id(),
 	                item.pedidoId(),
@@ -59,12 +73,16 @@ public class ItemPedidoController {
     		@ApiResponse(responseCode = "404", description = "Não foi encontrado o carrinho pelo id informado. Verifique!"),
     		@ApiResponse(responseCode = "200", description = "Carrinho localizado.")		
     })
-	public ResponseEntity<ItemPedidoDto> obterPorId(@PathVariable Long id) {
-		Optional<ItemPedidoDto> itemPedido = itemPedidoService.obterPorId(id);
-		if (!itemPedido.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(itemPedido.get());
+	public ItemPedidoDto obterPorId(@PathVariable Long id) {
+	    try {
+	        Optional<ItemPedidoDto> itemPedido = itemPedidoService.obterPorId(id);
+	        if (itemPedido.isEmpty()) {
+	            throw new ResourceNotFoundException("Não foi encontrado o carrinho pelo id informado: " + id);
+	        }
+	        return itemPedido.get();
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao obter o carrinho: " + e.getMessage());
+	    }
 	}
 
 	@PostMapping
@@ -76,7 +94,19 @@ public class ItemPedidoController {
     		@ApiResponse(responseCode = "201", description = "Carrinho criado com sucesso.")		
     })
 	public ItemPedidoDto criarItemPedido(@RequestBody ItemPedidoDto dto) {
-		return itemPedidoService.salvarItemPedido(dto);
+	    try {
+	        // Validação do dto
+	        if (dto == null) {
+	            throw new ResourceNotFoundException("Informações inválidas fornecidas para criar o carrinho: objeto não pode ser nulo.");
+	        }
+	        if (dto.pedidoId() == null || dto.jogoId() == null) {
+	            throw new ResourceNotFoundException("Informações inválidas fornecidas para criar o carrinho: 'pedidoId' e 'jogoId' são obrigatórios.");
+	        }
+
+	        return itemPedidoService.salvarItemPedido(dto);
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao criar o carrinho: " + e.getMessage());
+	    }
 	}
 
 	@DeleteMapping("/{id}")
@@ -87,10 +117,20 @@ public class ItemPedidoController {
     		@ApiResponse(responseCode = "204", description = "Carrinho excluído.")		
     })
 	public ResponseEntity<Void> apagarItemPedido(@PathVariable Long id) {
-		if (!itemPedidoService.apagarItemPedido(id)) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.noContent().build();
+	    try {
+	        // Validação do ID
+	        if (id == null || id <= 0) {
+	            throw new ResourceNotFoundException("ID inválido fornecido para excluir o carrinho: " + id);
+	        }
+
+	        boolean apagado = itemPedidoService.apagarItemPedido(id);
+	        if (!apagado) {
+	            throw new ResourceNotFoundException("Carrinho não localizado para o id: " + id);
+	        }
+	        return ResponseEntity.noContent().build();
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao tentar excluir o carrinho: " + e.getMessage());
+	    }
 	}
 
 	@PutMapping("/{id}")
@@ -101,11 +141,28 @@ public class ItemPedidoController {
     		@ApiResponse(responseCode = "200", description = "Carrinho atualizado.")		
     })
 	public ResponseEntity<ItemPedidoDto> atualizarItemPedido(@PathVariable Long id, @RequestBody ItemPedidoDto dto) {
-		Optional<ItemPedidoDto> itemPedidoAtualizado = itemPedidoService.alterarItemPedido(id, dto);
-		if (!itemPedidoAtualizado.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(itemPedidoAtualizado.get());
+	    try {
+	        // Validação do ID
+	        if (id == null || id <= 0) {
+	            throw new ResourceNotFoundException("ID inválido fornecido para atualizar o carrinho: " + id);
+	        }
+
+	        // Validação do dto
+	        if (dto == null) {
+	            throw new ResourceNotFoundException("Informações inválidas fornecidas para atualizar o carrinho: objeto não pode ser nulo.");
+	        }
+	        if (dto.pedidoId() == null || dto.jogoId() == null) {
+	            throw new ResourceNotFoundException("Informações inválidas fornecidas para atualizar o carrinho: 'pedidoId' e 'jogoId' são obrigatórios.");
+	        }
+
+	        Optional<ItemPedidoDto> itemPedidoAtualizado = itemPedidoService.alterarItemPedido(id, dto);
+	        if (itemPedidoAtualizado.isEmpty()) {
+	            throw new ResourceNotFoundException("Carrinho não localizado para o id: " + id);
+	        }
+	        return ResponseEntity.ok(itemPedidoAtualizado.get());
+	    } catch (Exception e) {
+	        throw new ResourceNotFoundException("Erro ao atualizar o carrinho: " + e.getMessage());
+	    }
 	}
 
 	@GetMapping("/pedido/{pedidoId}")
@@ -115,7 +172,16 @@ public class ItemPedidoController {
     		@ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum pedido ao carrinho.")		
     })
 	public List<ItemPedidoDto> buscarPorPedido(@PathVariable Long pedidoId) {
-		return itemPedidoService.buscarPorPedido(pedidoId);
+	    // Validação do pedidoId
+	    if (pedidoId == null || pedidoId <= 0) {
+	        throw new ResourceNotFoundException("ID do pedido inválido fornecido: " + pedidoId);
+	    }
+
+	    List<ItemPedidoDto> itens = itemPedidoService.buscarPorPedido(pedidoId);
+	    if (itens.isEmpty()) {
+	        throw new ResourceNotFoundException("Nenhum item encontrado para o pedido com id: " + pedidoId);
+	    }
+	    return itens;
 	}
 
 	@GetMapping("/jogo/{jogoId}")
@@ -125,6 +191,15 @@ public class ItemPedidoController {
     		@ApiResponse(responseCode = "200", description = "Caso a lista retorne vazia, é porque não existe nenhum jogo referente ao carrinho.")		
     })
 	public List<ItemPedidoDto> buscarPorJogo(@PathVariable Long jogoId) {
-		return itemPedidoService.buscarPorJogo(jogoId);
+	    // Validação do jogoId
+	    if (jogoId == null || jogoId <= 0) {
+	        throw new ResourceNotFoundException("ID do jogo inválido fornecido: " + jogoId);
+	    }
+
+	    List<ItemPedidoDto> itens = itemPedidoService.buscarPorJogo(jogoId);
+	    if (itens.isEmpty()) {
+	        throw new ResourceNotFoundException("Nenhum item encontrado para o jogo com id: " + jogoId);
+	    }
+	    return itens;
 	}
 }
