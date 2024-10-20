@@ -32,19 +32,18 @@ public class ClienteService {
 	public ClienteDto salvarCliente(CadastroClienteDto dto) {
 		EnderecoViacepDto enderecoViacep = ViaCepService.buscaEndereco(dto.cep());
 		enderecoViacep.setNumero(dto.numero());
-		
+
 		Endereco endereco = new Endereco(enderecoViacep);
-		
-	    Cliente clienteEntity = new Cliente();
-	    clienteEntity.setNome(dto.nome());
-	    clienteEntity.setEmail(dto.email());
-	    clienteEntity.setCpf(dto.cpf());
-	    clienteEntity.setDataNascimento(dto.dataNascimento());
-	    clienteEntity.setEndereco(endereco);
-		    
-		   
+
+		Cliente clienteEntity = new Cliente();
+		clienteEntity.setNome(dto.nome());
+		clienteEntity.setEmail(dto.email());
+		clienteEntity.setCpf(dto.cpf());
+		clienteEntity.setDataNascimento(dto.dataNascimento());
+		clienteEntity.setEndereco(endereco);
+
 		clienteEntity = clienteRepository.save(clienteEntity);
-		
+
 		return ClienteDto.toDTO(clienteEntity);
 	}
 
@@ -56,13 +55,33 @@ public class ClienteService {
 		return true;
 	}
 
-	public Optional<ClienteDto> alterarCliente(Long id, ClienteDto dto) {
-		if (!clienteRepository.existsById(id)) {
+	public Optional<ClienteDto> alterarCliente(Long id, CadastroClienteDto dto) {
+		Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+		if (!clienteOptional.isPresent()) {
 			return Optional.empty();
 		}
-		Cliente clienteEntity = dto.toEntity();
-		clienteEntity.setId(id);
+
+		Cliente clienteEntity = clienteOptional.get();
+
+		if (dto.nome() != null) {
+			clienteEntity.setNome(dto.nome());
+		}
+		if (dto.email() != null) {
+			clienteEntity.setEmail(dto.email());
+		}
+		if (dto.dataNascimento() != null) {
+			clienteEntity.setDataNascimento(dto.dataNascimento());
+		}
+		if (dto.cep() != null) {
+			EnderecoViacepDto enderecoViacep = ViaCepService.buscaEndereco(dto.cep());
+			enderecoViacep.setNumero(dto.numero());
+			Endereco endereco = new Endereco(enderecoViacep);
+			clienteEntity.setEndereco(endereco);
+		}
+
 		clienteEntity = clienteRepository.save(clienteEntity);
+
 		return Optional.of(ClienteDto.toDTO(clienteEntity));
 	}
+
 }

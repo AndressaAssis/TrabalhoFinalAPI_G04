@@ -88,11 +88,12 @@ public class ClienteController {
     		@ApiResponse(responseCode = "400", description = "Cliente não localizado. Verifique!"),
     		@ApiResponse(responseCode = "200", description = "Cliente atualizado.")		
     })
-	public ResponseEntity<ClienteDto> atualizarCliente(@PathVariable Long id, @RequestBody ClienteDto dto) {
-		Optional<ClienteDto> clienteAtualizado = clienteService.alterarCliente(id, dto);
-		if (!clienteAtualizado.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(clienteAtualizado.get());
+	public ResponseEntity<ClienteDto> atualizarCliente(@PathVariable Long id, @RequestBody CadastroClienteDto dto) {
+	    Optional<ClienteDto> clienteAtualizado = clienteService.alterarCliente(id, dto);
+	    if (clienteAtualizado.isEmpty()) {
+	        return ResponseEntity.notFound().build();
+	    }
+	    return ResponseEntity.ok(clienteAtualizado.get());
 	}
+
 }
