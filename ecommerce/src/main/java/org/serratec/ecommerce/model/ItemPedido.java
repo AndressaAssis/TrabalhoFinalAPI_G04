@@ -9,8 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "item_pedido")
 public class ItemPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,6 +108,19 @@ public class ItemPedido {
 				&& quantidade == other.quantidade
 				&& Double.doubleToLongBits(valorBruto) == Double.doubleToLongBits(other.valorBruto)
 				&& Double.doubleToLongBits(valorLiquido) == Double.doubleToLongBits(other.valorLiquido);
+	}
+	public void calcularValores() {
+		 if (this.jogo == null) {
+		        throw new IllegalStateException("O jogo não foi associado a este item de pedido.");
+		    }
+		 this.valorBruto = this.jogo.getPrecoUnitario() * this.quantidade;
+
+		 if (this.percentualDesconto > 0) {
+		        this.valorLiquido = this.valorBruto - (this.valorBruto * this.percentualDesconto / 100);
+		    } else {
+		        this.valorLiquido = this.valorBruto; // Sem desconto
+		    }
+		
 	}
  
 }

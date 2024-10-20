@@ -1,4 +1,4 @@
-CREATE TABLE itemPedido (
+CREATE TABLE item_Pedido (
 id serial primary key,
 quantidade INT NOT NULL,
 precoUnitario NUMERIC NOT NULL,

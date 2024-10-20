@@ -102,4 +102,5 @@ public class Jogo {
 	public void setDataCadastro(LocalDate dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
+
 }
