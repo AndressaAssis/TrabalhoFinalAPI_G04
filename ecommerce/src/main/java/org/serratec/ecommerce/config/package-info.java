@@ -1,0 +1,1 @@
+package org.serratec.ecommerce.config;

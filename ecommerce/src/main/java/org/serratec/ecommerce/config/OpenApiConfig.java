@@ -1,4 +1,4 @@
-package org.serratec.ecommerce;
+package org.serratec.ecommerce.config;
 
 import org.springframework.context.annotation.Configuration;
 
