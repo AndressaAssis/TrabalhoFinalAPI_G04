@@ -1,4 +1,4 @@
-package org.serratec.ecommerce;
+package org.serratec.ecommerce.exception;
 
 import java.util.HashMap;
 import java.util.Map;
