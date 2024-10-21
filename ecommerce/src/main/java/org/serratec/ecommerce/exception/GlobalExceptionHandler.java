@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-//Esta anotação permite capturar exceções globalmente
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 	

@@ -118,7 +118,7 @@ public class ItemPedido {
 		 if (this.percentualDesconto > 0) {
 		        this.valorLiquido = this.valorBruto - (this.valorBruto * this.percentualDesconto / 100);
 		    } else {
-		        this.valorLiquido = this.valorBruto; // Sem desconto
+		        this.valorLiquido = this.valorBruto; 
 		    }
 		
 	}

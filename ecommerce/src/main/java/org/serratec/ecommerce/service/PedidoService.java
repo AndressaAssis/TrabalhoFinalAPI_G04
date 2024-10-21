@@ -40,41 +40,43 @@ public class PedidoService {
     }
 
     public PedidoDto salvarPedido(PedidoDto dto) {
-    	 Pedido pedido = dto.toEntity();
-    	    
-    	 Cliente cliente = clienteRepository.findById(dto.clienteId()).orElseThrow(() ->
-    	      new IllegalArgumentException("Cliente não encontrado"));
-    	  
-    	  pedido.setCliente(cliente);
-    	  pedido = pedidoRepository.save(pedido);
-    	  
-    	  List<ItemPedido> itens = new ArrayList<>();
-    	  
-    	  for (ItemPedidoDto itemDto : dto.itensPedido()) {
-              ItemPedido item = itemDto.toEntity();
-              
-              item.setPedido(pedido);
+        Pedido pedido = dto.toEntity();
+        
+        Cliente cliente = clienteRepository.findById(dto.clienteId())
+            .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+        
+        pedido.setCliente(cliente);
+        pedido = pedidoRepository.save(pedido);
+        
+        List<ItemPedido> itens = new ArrayList<>();
+        
+        for (ItemPedidoDto itemDto : dto.itensPedido()) {
+            ItemPedido item = itemDto.toEntity();
+            item.setPedido(pedido);
 
-              Jogo jogo = jogoRepository.findById(itemDto.jogoId()).orElse(null);
-              new IllegalArgumentException("Jogo não encontrado");
-              item.setJogo(jogo);
-              
+            Jogo jogo = jogoRepository.findById(itemDto.jogoId())
+                .orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado"));
+            item.setJogo(jogo);
+            
+            item.setPrecoUnitario(jogo.getPrecoUnitario());
+            double valorBruto = jogo.getPrecoUnitario() * item.getQuantidade();
+            double valorLiquido = valorBruto - (valorBruto * item.getPercentualDesconto() / 100);
+            item.setValorBruto(valorBruto);
+            item.setValorLiquido(valorLiquido);
+            
+            itens.add(item);
+        }
 
-              item.setPrecoUnitario(jogo.getPrecoUnitario());
-              double valorBruto = jogo.getPrecoUnitario() * item.getQuantidade();
-              double valorLiquido = valorBruto - (valorBruto * item.getPercentualDesconto() / 100);
-              item.setValorBruto(valorBruto);
-              item.setValorLiquido(valorLiquido);
-              
-              itens.add(item);
-          }
-             
-              pedido.setItensPedido(itens);
-              pedidoRepository.save(pedido);
-              
-    	     return PedidoDto.toDTO(pedido);  
-    	 }
-    	  
+        pedido.setItensPedido(itens);
+        
+        double valorTotal = itens.stream()
+            .mapToDouble(ItemPedido::getValorLiquido)
+            .sum();
+        pedido.setValorTotal(valorTotal);
+        
+        pedidoRepository.save(pedido);
+        return PedidoDto.toDTO(pedido);
+    }
 
     public boolean apagarPedido(Long id) {
         if (!pedidoRepository.existsById(id)) {
@@ -93,29 +95,32 @@ public class PedidoService {
         Pedido pedidoAtualizado = dto.toEntity();
         pedidoAtualizado.setId(id);
         
-        Cliente cliente = clienteRepository.findById(dto.clienteId()).orElse(null);
-        if (cliente == null) {
-            throw new IllegalArgumentException("Cliente não encontrado");
-        }
+        Cliente cliente = clienteRepository.findById(dto.clienteId()).orElseThrow(() -> 
+            new IllegalArgumentException("Cliente não encontrado"));
         pedidoAtualizado.setCliente(cliente);
         
-        pedidoAtualizado.setItensPedido(new ArrayList<>());
+        List<ItemPedido> itensAtualizados = new ArrayList<>();
         for (ItemPedidoDto itemDto : dto.itensPedido()) {
             ItemPedido itemPedido = itemDto.toEntity();
 
-            Jogo jogo = jogoRepository.findById(itemDto.jogoId()).orElse(null);
-            if (jogo == null) {
-                throw new IllegalArgumentException("Jogo não encontrado");
-            }
+            Jogo jogo = jogoRepository.findById(itemDto.jogoId()).orElseThrow(() -> 
+                new IllegalArgumentException("Jogo não encontrado"));
 
             itemPedido.setPrecoUnitario(jogo.getPrecoUnitario());
             itemPedido.setPedido(pedidoAtualizado);
             itemPedido.calcularValores();
 
-            pedidoAtualizado.getItensPedido().add(itemPedido);
+            itensAtualizados.add(itemPedido);
         }
+        
+        pedidoAtualizado.setItensPedido(itensAtualizados);
+        double valorTotal = itensAtualizados.stream()
+            .mapToDouble(ItemPedido::getValorLiquido)
+            .sum();
+        pedidoAtualizado.setValorTotal(valorTotal);
         
         pedidoAtualizado = pedidoRepository.save(pedidoAtualizado);
         return Optional.of(PedidoDto.toDTO(pedidoAtualizado));
     }
+
 }

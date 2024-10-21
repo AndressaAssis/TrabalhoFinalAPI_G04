@@ -8,7 +8,6 @@ import org.serratec.ecommerce.exception.ResourceNotFoundException;
 import org.serratec.ecommerce.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,10 +43,10 @@ public class PedidoController {
             }
             return pedidos;
         } catch (ResourceNotFoundException e) {
-            // Aqui você pode lançar a exceção novamente ou fazer um log, se necessário.
+            
             throw e;
         } catch (Exception e) {
-            // Trate outras exceções que possam ocorrer
+            
             throw new RuntimeException("Erro ao listar os pedidos.", e);
         }
     }
@@ -67,10 +66,10 @@ public class PedidoController {
             }
             return dto.get();
         } catch (ResourceNotFoundException e) {
-            // Re-lança a exceção para ser tratada pelo GlobalExceptionHandler
+            
             throw e;
         } catch (Exception e) {
-            // Trata outras exceções que possam ocorrer
+            
             throw new RuntimeException("Erro ao obter o pedido com id: " + id, e);
         }
     }
@@ -85,7 +84,7 @@ public class PedidoController {
     })
     public PedidoDto cadastrarPedido(@RequestBody PedidoDto dto) {
         try {
-            // Aqui você pode adicionar validações se necessário
+            
             PedidoDto savedPedido = pedidoService.salvarPedido(dto);
             return savedPedido;
         } catch (IllegalArgumentException e) {
@@ -109,7 +108,7 @@ public class PedidoController {
                 throw new ResourceNotFoundException("Pedido não localizado com id: " + id);
             }
         } catch (ResourceNotFoundException e) {
-            throw e; // Re-lança a exceção para ser tratada pelo GlobalExceptionHandler
+            throw e; 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao excluir o pedido com id: " + id, e);
         }
@@ -130,7 +129,7 @@ public class PedidoController {
             }
             return pedidoAlterado.get();
         } catch (ResourceNotFoundException e) {
-            throw e; // Re-lança a exceção para ser tratada pelo GlobalExceptionHandler
+            throw e; 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao alterar o pedido com id: " + id, e);
         }
