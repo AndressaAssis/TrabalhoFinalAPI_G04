@@ -23,13 +23,14 @@ public record PedidoDto(
 	}
 
 	public static PedidoDto toDTO(Pedido pedido) {
-		Long clienteId = (pedido.getCliente() != null) ? pedido.getCliente().getId() : null;
+		//Long clienteId = (pedido.getCliente() != null) ? pedido.getCliente().getId() : null;
 		
 		return new PedidoDto(
 				pedido.getId(), 
 				pedido.getDataPedido(), 
 				pedido.getValorTotal(),
-				clienteId, 
+				pedido.getCliente().getId(),
+		//		clienteId, 
 				pedido.getItensPedido() != null ? 
 				pedido.getItensPedido().stream().map(ItemPedidoDto::toDTO).toList(): Collections.emptyList()
 		);

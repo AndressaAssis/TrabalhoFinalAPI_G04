@@ -26,7 +26,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/pedidos/{id}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/pedidos/{id}").hasRole("ADM")
 				.requestMatchers(HttpMethod.DELETE, "/pedidos/{id}").hasRole("ADM")
-				.requestMatchers(HttpMethod.PUT, "/pedidos/{id}").hasRole("ADM")
+				.requestMatchers(HttpMethod.PUT, "/pedidos/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/clientes").permitAll()
 				.requestMatchers(HttpMethod.POST, "/clientes").hasRole("ADM")
 				.requestMatchers(HttpMethod.DELETE, "/clientes").hasRole("ADM")
@@ -50,7 +50,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/jogos/{id}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/jogos/{id}").hasRole("ADM")
 				.requestMatchers(HttpMethod.DELETE, "/jogos/{id}").hasRole("ADM")
-				.requestMatchers(HttpMethod.PUT, "/jogos/{id}").hasRole("ADM"))
+				.requestMatchers(HttpMethod.PUT, "/jogos/{id}").hasRole("ADM")
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").hasRole("ADM"))
 				.csrf(csfr -> csfr.disable())
 				.httpBasic(Customizer.withDefaults());
 
