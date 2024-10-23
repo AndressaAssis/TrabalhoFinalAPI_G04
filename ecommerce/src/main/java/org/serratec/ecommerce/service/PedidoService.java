@@ -135,6 +135,9 @@ public class PedidoService {
 	        pedidoAtualizado.setValorTotal(valorTotal);
 	        
 	        pedidoAtualizado = pedidoRepository.save(pedidoAtualizado);
+	        
+	        emailService.enviarEmailComPedido(pedidoAtualizado, cliente.getEmail());
+	        
 	        return Optional.of(PedidoDto.toDTO(pedidoAtualizado));
 	    }
 
