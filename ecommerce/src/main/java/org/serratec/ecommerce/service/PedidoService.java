@@ -12,9 +12,12 @@ import org.serratec.ecommerce.model.Jogo;
 import org.serratec.ecommerce.model.Pedido;
 import org.serratec.ecommerce.repository.PedidoRepository;
 import org.serratec.ecommerce.repository.ClienteRepository;
+import org.serratec.ecommerce.repository.ItemPedidoRepository;
 import org.serratec.ecommerce.repository.JogoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PedidoService {
@@ -29,6 +32,9 @@ public class PedidoService {
 	    private ClienteRepository clienteRepository;
 	    
 	    @Autowired
+	    private ItemPedidoRepository itemRepository;
+	    
+	    @Autowired
 	    private EmailService emailService;
 
 	    public List<PedidoDto> listarTodos() {
@@ -41,7 +47,7 @@ public class PedidoService {
 	        }
 			return Optional.of(PedidoDto.toDTO(pedidoRepository.findById(id).get()));
 	    }
-
+	    
 	    public PedidoDto salvarPedido(PedidoDto dto) {
 	        Pedido pedido = dto.toEntity();
 	        
@@ -91,12 +97,14 @@ public class PedidoService {
 	        pedidoRepository.deleteById(id);
 	        return true;
 	    }
-
+	    
+	    @Transactional
 	    public Optional<PedidoDto> alterarPedido(Long id, PedidoDto dto) {
 	        if (!pedidoRepository.existsById(id)) {
 	            return Optional.empty();
 	        }
-	        Pedido pedidoExistente = pedidoRepository.findById(id).get();
+	        
+	        itemRepository.deleteByPedidoId(id);
 	        
 	        Pedido pedidoAtualizado = dto.toEntity();
 	        pedidoAtualizado.setId(id);
@@ -112,6 +120,7 @@ public class PedidoService {
 	            Jogo jogo = jogoRepository.findById(itemDto.jogoId()).orElseThrow(() -> 
 	                new IllegalArgumentException("Jogo não encontrado"));
 
+	            itemPedido.setJogo(jogo);
 	            itemPedido.setPrecoUnitario(jogo.getPrecoUnitario());
 	            itemPedido.setPedido(pedidoAtualizado);
 	            itemPedido.calcularValores();
