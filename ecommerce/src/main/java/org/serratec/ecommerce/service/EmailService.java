@@ -21,10 +21,13 @@ public class EmailService {
 		enviaMensagem.setSubject("Confirmação do Pedido nº " + pedido.getId());
 		
 		StringBuilder mensagem = new StringBuilder();
-		mensagem.append("Número do Pedido: ").append(pedido.getId()).append("\n")
+		mensagem.append("---------------------------------------\n")
+		        .append("Olá ").append(pedido.getCliente().getNome()).append(", Obrigada por comprar na Green Steam! \n")
+		        .append("Espero que tenha gostado da compra!\n")
+		        .append("---------------------------------------\n")
+		        .append("Número do Pedido: ").append(pedido.getId()).append("\n")
 		        .append("Data do Pedido: ").append(pedido.getDataPedido()).append("\n")
 		        .append("Valor Total: R$ ").append(pedido.getValorTotal()).append("\n")
-		        .append("Cliente: ").append(pedido.getCliente().getNome()).append("\n")
 		        .append("\nItens do Pedido:\n")
 		        .append("---------------------------------------\n");
 	
@@ -35,6 +38,7 @@ public class EmailService {
 		            .append("Desconto: ").append(item.getPercentualDesconto()).append("%\n")
 		            .append("Valor Bruto: R$ ").append(item.getValorBruto()).append("\n")
 		            .append("Valor Líquido: R$ ").append(item.getValorLiquido()).append("\n")
+		            .append("A chave do seu jogo é: ").append(item.getChaveUnica()).append("\n")
 		            .append("---------------------------------------\n");
 		}
 

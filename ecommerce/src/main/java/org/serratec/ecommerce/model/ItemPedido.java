@@ -40,6 +40,17 @@ public class ItemPedido {
     @Column(name = "valorbruto")
     private double valorBruto;
     
+    @Column(name = "chave_unica")
+    private String chaveUnica;
+    
+    public String getChaveUnica() {
+        return chaveUnica;
+    }
+
+    public void setChaveUnica(String chaveUnica) {
+        this.chaveUnica = chaveUnica;
+    }
+    
 	public Long getId() {
 		return id;
 	}

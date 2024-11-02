@@ -3,6 +3,7 @@ package org.serratec.ecommerce.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.serratec.ecommerce.dto.ItemPedidoDto;
 import org.serratec.ecommerce.dto.PedidoDto;
@@ -72,6 +73,8 @@ public class PedidoService {
 	            double valorLiquido = valorBruto - (valorBruto * item.getPercentualDesconto() / 100);
 	            item.setValorBruto(valorBruto);
 	            item.setValorLiquido(valorLiquido);
+	            
+	            item.setChaveUnica(UUID.randomUUID().toString());
 	            
 	            itens.add(item);
 	        }
