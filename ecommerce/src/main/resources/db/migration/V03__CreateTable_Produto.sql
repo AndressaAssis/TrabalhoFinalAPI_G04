@@ -6,5 +6,6 @@ plataforma VARCHAR (100) NOT NULL,
 precoUnitario NUMERIC NOT NULL,
 descricao TEXT NOT NULL,
 quantidadeEstoque INT NOT NULL,
-dataCadastro DATE
+dataCadastro DATE,
+imagem_url VARCHAR(255)
 );

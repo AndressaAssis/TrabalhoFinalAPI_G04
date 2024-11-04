@@ -14,7 +14,8 @@ public record JogoDto(
         double precoUnitario,
         String descricao,
         int quantidadeEstoque,
-        LocalDate dataCadastro
+        LocalDate dataCadastro,
+        String imagemUrl
         ){
 
     public Jogo toEntity() {
@@ -27,6 +28,7 @@ public record JogoDto(
         jogo.setDescricao(this.descricao);
         jogo.setQuantidadeEstoque(this.quantidadeEstoque);
         jogo.setDataCadastro(this.dataCadastro);
+        jogo.setImagemUrl(this.imagemUrl);
         return jogo;
     }
 
@@ -39,6 +41,7 @@ public record JogoDto(
                 jogo.getPrecoUnitario(),
                 jogo.getDescricao(),
                 jogo.getQuantidadeEstoque(),
-                jogo.getDataCadastro());
+                jogo.getDataCadastro(),
+                jogo.getImagemUrl());
     }
 }

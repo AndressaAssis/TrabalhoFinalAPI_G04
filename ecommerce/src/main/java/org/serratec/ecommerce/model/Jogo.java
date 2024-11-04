@@ -32,6 +32,7 @@ public class Jogo {
 	@NotNull(message = "O gênero não pode ser nulo.")
 	private Genero genero;
 	
+	
 	@Enumerated(EnumType.STRING)
 	@NotNull(message = "A plataforma não pode ser nulo.")
 	private Plataforma plataforma;
@@ -48,6 +49,15 @@ public class Jogo {
 	@Column(name = "datacadastro")
 	private LocalDate dataCadastro;
 	
+	@Column(name = "imagem_url")
+	private String imagemUrl;
+	
+	public String getImagemUrl() {
+		return imagemUrl;
+	}
+	public void setImagemUrl(String imagemUrl) {
+		this.imagemUrl = imagemUrl;
+	}
 	public List<ItemPedido> getItensPedido() {
 		return itensPedido;
 	}

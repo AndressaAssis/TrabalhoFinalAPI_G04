@@ -16,7 +16,7 @@ public class EmailService {
 	public String enviarEmailComPedido(Pedido pedido, String destinatario) {
 		SimpleMailMessage enviaMensagem = new SimpleMailMessage();
 		
-		enviaMensagem.setFrom("andressaassisjandre@gmail.com");
+		enviaMensagem.setFrom("greensteamjogos0@gmail.com");
 		enviaMensagem.setTo(destinatario);
 		enviaMensagem.setSubject("Confirmação do Pedido nº " + pedido.getId());
 		
