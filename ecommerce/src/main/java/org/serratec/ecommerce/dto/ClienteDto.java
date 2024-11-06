@@ -1,47 +1,76 @@
 package org.serratec.ecommerce.dto;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import org.serratec.ecommerce.model.Cliente;
-import org.serratec.ecommerce.model.Endereco;
 
-public record ClienteDto(
-		Long id, 
-		String nome, 
-		String cpf, 
-		String email,
-		LocalDate dataNascimento,
-		Endereco endereco,
-		List<Long> pedidosIds
-		){
+public class ClienteDto {
+    private Long id;
+    private String nome;
+    private String cpf;
+    private String email;
+    private String numero;
+    private String cep;
 
-	public Cliente toEntity() {
-		Cliente cliente = new Cliente();
-		cliente.setId(this.id);
-		cliente.setNome(this.nome);
-		cliente.setCpf(this.cpf);
-		cliente.setEmail(this.email);
-		cliente.setDataNascimento(this.dataNascimento);
-		cliente.setEndereco(this.endereco);
-		return cliente;
-	}
+    public ClienteDto() {}
 
-	public static ClienteDto toDTO(Cliente cliente) {
-		List<Long> pedidosIds = new ArrayList<Long>();
-		
-		if (Objects.nonNull(cliente.getPedidos())) {
-			pedidosIds = cliente.getPedidos().stream().map(pedido -> pedido.getId()).toList();
-		}
-		
-		return new ClienteDto(cliente.getId(), 
-				cliente.getNome(), 
-				cliente.getCpf(), 
-				cliente.getEmail(), 
-				cliente.getDataNascimento(), 
-				cliente.getEndereco(),
-				pedidosIds);
-	}
+    public ClienteDto(Cliente cliente) {
+        this.id = cliente.getId();
+        this.nome = cliente.getNome();
+        this.cpf = cliente.getCpf();
+        this.email = cliente.getEmail();
+        this.numero = cliente.getEndereco().getNumero();
+        this.cep = cliente.getEndereco().getCep();
+    }
+
+    public static ClienteDto toDTO(Cliente cliente) {
+        return new ClienteDto(cliente);
+    }
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
 }
